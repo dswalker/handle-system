@@ -23,10 +23,12 @@ module HandleSystem
     # @param [String] server         ip_address:port, e.g., 123.456.78.9:8000
     # @param [String] hs_admin       handle administrator
     # @param [String] priv_key_path  file path to private key
+    # @param [String] pass_phrase    [optional] pass phrase for private key
     #
-    def initialize(server, hs_admin, priv_key_path)
+    def initialize(server, hs_admin, priv_key_path, pass_phrase = nil)
       @hs_admin = hs_admin
       @private_key_path = priv_key_path
+      @pass_phrase = pass_phrase
       @base_url = 'https://' + server + '/api'
       @session_id = initialize_session
     end
@@ -152,7 +154,8 @@ module HandleSystem
       combined_nonce = server_nonce + client_nonce
 
       # create combined nonce digest and sign with private key
-      private_key = OpenSSL::PKey::RSA.new(File.read(@private_key_path))
+      key_file = File.read(@private_key_path)
+      private_key = OpenSSL::PKey::RSA.new(key_file, @pass_phrase)
       signature = private_key.sign(OpenSSL::Digest::SHA256.new, combined_nonce)
 
       # build the authorization header

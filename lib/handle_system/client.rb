@@ -13,9 +13,10 @@ module HandleSystem
     # @param [String] server         ip_address:port, e.g., 123.456.78.9:8000
     # @param [String] hs_admin       handle administrator
     # @param [String] priv_key_path  file path to private key
+    # @param [String] pass_phrase    [optional] pass phrase for private key
     #
-    def initialize(server, hs_admin, priv_key_path)
-      @http_client = HttpClient.new(server, hs_admin, priv_key_path)
+    def initialize(server, hs_admin, priv_key_path, pass_phrase = nil)
+      @http_client = HttpClient.new(server, hs_admin, priv_key_path, pass_phrase)
       @handle_base = 'http://hdl.handle.net/'
     end
 
