@@ -55,10 +55,10 @@ module HandleSystem
     #
     # @param [String] handle  handle identifier
     #
-    # @return [<JSON>] the handle record
+    # @return [HandleSystem::Record] the handle record
     #
     def get(handle)
-      json = @http_client.get_it('/handles/' + handle)
+      json = @http_client.get('/handles/' + handle)
       Record.new.from_json(json)
     end
 
@@ -70,7 +70,7 @@ module HandleSystem
     # @return [Boolean] true if we deleted the record
     #
     def delete(handle)
-      json = @http_client.delete_it('/handles/' + handle)
+      json = @http_client.delete('/handles/' + handle)
       return true if json['responseCode'] == 1
     end
 

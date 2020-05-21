@@ -11,19 +11,39 @@ module HandleSystem
     attr_reader :response_code
 
     # @return [String] the handle specified in the request
-    attr_reader :handle
+    attr_accessor :handle
+
+    # @return [String] the URL we sent that produced the error
+    attr_accessor :url
 
     #
     # New Handle server Error
     #
-    # @param [Integer] code    handle protocol response code for the message
-    # @param [String] handle   the handle specified in the request
-    # @param [String] message  error message
+    # @param [Integer] response_code  handle protocol response code for the message
+    # @param [String] message         error message
     #
-    def initialize(code, handle, message)
-      @response_code = code.to_int unless code.nil?
-      @handle = handle
+    def initialize(response_code, message)
+      @response_code = response_code.to_int unless response_code.nil?
       super(message)
+    end
+
+    #
+    # Handle server response codes / description
+    #
+    # @return [Hash]  in the form of code => description
+    #
+    def self.response_codes
+      {
+        2 => 'An unexpected error on the server',
+        100 => 'Handle not found',
+        101 => 'Handle already exists',
+        102 => 'Invalid handle',
+        200 => 'Values not found',
+        201 => 'Value already exists',
+        202 => 'Invalid value',
+        301 => 'Server not responsible for handle',
+        402 => 'Authentication needed'
+      }
     end
   end
 

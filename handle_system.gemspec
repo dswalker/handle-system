@@ -8,12 +8,13 @@ Gem::Specification.new do |spec|
   spec.authors       = ['David Walker']
   spec.email         = ['dwalker@calstate.edu']
 
-  spec.summary       = 'A library for interfacing with the Handle System JSON REST API'
-  spec.description   = 'This gem works with Handle System version 8 or higher. ' + 
-                       "For older versions of the Handle System, which didn't have " +
-                       'a JSON API, consider using the handle-system gem'
+  spec.summary       = 'A library for interfacing with the Handle System JSON REST API.'
+  spec.description   = spec.summary + ' This gem works with Handle System ' +
+                       'version 8 or higher. For older versions of the ' +
+                       "Handle System, which didn't have a JSON API, " +
+                       'consider using the handle-system gem.'
   spec.homepage      = 'https://github.com/csuscholarworks/handle-system'
-  spec.license       = 'APACHE'
+  spec.license       = 'Apache-2.0'
   spec.required_ruby_version = Gem::Requirement.new('>= 2.5.0')
 
   spec.metadata['homepage_uri'] = spec.homepage

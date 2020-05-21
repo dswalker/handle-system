@@ -41,11 +41,10 @@ module HandleSystem
     # @raise HandleSystem::Error  if we got an error from the server
     # @return [JSON]      parsed json response from handle server
     #
-    def get_it(path)
+    def get(path)
       url = @base_url + path
-      json = self.class.get(url, options).parsed_response
-      check_errors(json)
-      json
+      response = self.class.get(url, options)
+      process_response(url, response)
     end
 
     #
@@ -57,11 +56,10 @@ module HandleSystem
     # @raise HandleSystem::Error  if we got an error from the server
     # @return [JSON]      parsed json response from handle server
     #
-    def put_it(path, body)
+    def put(path, body)
       url = @base_url + path
-      json = self.class.put(url, body: body, **options).parsed_response
-      check_errors(json)
-      json
+      response = self.class.put(url, body: body, **options)
+      process_response(url, response)
     end
 
     #
@@ -72,19 +70,47 @@ module HandleSystem
     # @raise HandleSystem::Error  if we got an error from the server
     # @return [JSON]      parsed json response from handle server
     #
-    def delete_it(path)
+    def delete(path)
       url = @base_url + path
-      json = self.class.delete(url, options).parsed_response
-      check_errors(json)
-      json
+      response = self.class.delete(url, options)
+      process_response(url, response)
     end
 
     private
 
     #
+    # Extract JSON from response, throw any errors we found
+    #
+    # @param [String] url the URL we sent
+    # @param [HttParty::Response] response
+    #
+    # @return [JSON] the json response from the server
+    #
+    def process_response(url, response)
+      json = response.parsed_response
+      response_code = json['responseCode']
+      return json unless response_code != 1
+
+      # we got an error response from the handle server, so convert it into
+      # an actual exception and throw it here
+
+      message = if json['message']
+                  json['message']
+                elsif Error.response_codes.include? response_code
+                  Error.response_codes[response_code]
+                else
+                  'Unexpected error'
+                end
+
+      error = Error.new(response_code, message)
+      error.handle = json['handle']
+      error.url = url
+      raise error
+    end
+
+    #
     # Header and connection options
     #
-    # @raise HandleSystem::Error
     # @return [Hash]
     #
     def options
@@ -95,19 +121,6 @@ module HandleSystem
         },
         verify: false
       }
-    end
-
-    #
-    # If we got an error message from the handle server, convert it into
-    # an actual exception and throw it here
-    #
-    # @param [JSON] json  handle server json response
-    # @raise HandleSystem::Error
-    #
-    def check_errors(json)
-      return unless json['message']
-
-      raise Error.new(json['responseCode'], json['handle'], json['message'])
     end
 
     #
@@ -160,11 +173,11 @@ module HandleSystem
 
       # build the authorization header
       header = 'Handle sessionId="' + session_id + '", ' \
-              'id="' + CGI.escape(@hs_admin) + '", ' \
-              'type="HS_PUBKEY", ' \
-              'cnonce="' + Base64.encode64(client_nonce) + '", ' \
-              'alg="SHA256", ' \
-              'signature="' + Base64.encode64(signature) + '"'
+               'id="' + CGI.escape(@hs_admin) + '", ' \
+               'type="HS_PUBKEY", ' \
+               'cnonce="' + Base64.encode64(client_nonce) + '", ' \
+               'alg="SHA256", ' \
+               'signature="' + Base64.encode64(signature) + '"'
       header.gsub("\n", '')
     end
   end

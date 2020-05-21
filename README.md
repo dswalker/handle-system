@@ -10,7 +10,7 @@ This library works with Handle System version 8 or higher.  For older versions o
 
 Before you start using the library, you need to convert your Handle server's private key into PEM format.  The Handle Server distribution directory (e.g., `/hs/handle-9.2.0`) has a utility, `hdl-convert-key`, for doing this.  Your private key (`admpriv.bin`) is in the server directory (e.g., `/hs/svr_1`).
 
-On the Handle server, Run this command to convert the file:
+On the Handle server, run this command to convert the file:
 
 ```
 /hs/handle-9.2.0/bin/hdl-convert-key /hs/svr_1/admpriv.bin -o /hs/svr_1/admpriv.pem
