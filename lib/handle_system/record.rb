@@ -30,6 +30,8 @@ module HandleSystem
     # @param [String] email     [optional] email address to add to record
     # @param [String] hs_admin  [optional] handle administrator to add to record
     #
+    # @return [self]
+    #
     def from_values(handle, url, email = nil, hs_admin = nil)
       @handle = handle
       @url = url
@@ -50,7 +52,9 @@ module HandleSystem
     #
     # Populate Record from JSON
     #
-    # @param [JSON] data  the handle server record as json
+    # @param json [JSON]  the handle server record as json
+    #
+    # @return [self]
     #
     def from_json(json)
       @data = json
