@@ -15,7 +15,7 @@ Gem::Specification.new do |spec|
                        'consider using the handle-system gem.'
   spec.homepage      = 'https://github.com/csuscholarworks/handle-system'
   spec.license       = 'Apache-2.0'
-  spec.required_ruby_version = Gem::Requirement.new('>= 2.5.0')
+  spec.required_ruby_version = Gem::Requirement.new('>= 2.7.8')
 
   spec.metadata['homepage_uri'] = spec.homepage
   spec.metadata['source_code_uri'] = spec.homepage
@@ -31,5 +31,4 @@ Gem::Specification.new do |spec|
   spec.require_paths = ['lib']
 
   spec.add_dependency 'httparty', '~> 0.21'
-  spec.add_development_dependency 'solargraph'
 end
